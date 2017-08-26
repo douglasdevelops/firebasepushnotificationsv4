@@ -38,9 +38,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
         
         FirebaseApp.configure()
         
-        //No Longer Needed With addition of didRefreshRegistrationToken delegate method
-        //NotificationCenter.default.addObserver(self, selector: #selector(self.tokenRefreshNotification(notification:)), name: NSNotification.Name.InstanceIDTokenRefresh, object: nil)
-        
         return true
     }
 
@@ -55,33 +52,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate, UNUser
     func applicationWillEnterForeground(_ application: UIApplication) {
     }
 
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        connectToFCM()
-    }
-    
-    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
-        let refreshedToken = InstanceID.instanceID().token()
-        print("InstanceID token: \(String(describing: refreshedToken))")
-        
-        connectToFCM()
-    }
     
     func messaging(_ messaging: Messaging, didReceive remoteMessage: MessagingRemoteMessage) {
     }
     
-    ///Delegate function to show banner notification if application is in the foreground
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        
-        completionHandler(.alert)
-    }
-   
-
     func applicationWillTerminate(_ application: UIApplication) {
     }
     
+    //MARK: Firebase Methods/Notification
     func connectToFCM() {
        Messaging.messaging().shouldEstablishDirectChannel = true;
     }
-
+    
+    ///Delegate function to show banner notification if application is in the foreground
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler(.alert)
+    }
+    func messaging(_ messaging: Messaging, didRefreshRegistrationToken fcmToken: String) {
+        let refreshedToken = InstanceID.instanceID().token()
+        connectToFCM()
+    }
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        connectToFCM()
+    }
 }
 

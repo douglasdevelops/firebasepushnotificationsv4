@@ -18,11 +18,6 @@ class ViewController: UIViewController {
         
         //DS: Not sure if topic subscription is needed here.  RPN's work without this included
         //Messaging.messaging().subscribe(toTopic: "/topics/news")
-        
-        
     }
-
-    
-
 }
 
